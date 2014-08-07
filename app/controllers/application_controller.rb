@@ -2,4 +2,16 @@ class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
+
+  # Assign admin to first user
+  # Devise helper:
+  def after_sign_in_path_for resource
+    if resource.is_a? User
+      if User.count == 1
+        resource.add_role 'admin'
+      end
+      resource
+    end
+    root_path
+  end
 end
